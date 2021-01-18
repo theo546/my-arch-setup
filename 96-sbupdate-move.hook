@@ -1,0 +1,34 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = File
+Target = usr/lib/modules/*/vmlinuz
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = File
+Target = usr/lib/initcpio/*
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = intel-ucode
+Target = amd-ucode
+
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = systemd
+
+[Action]
+Description = Moving signed UEFI kernel images...
+When = PostTransaction
+Exec = /bin/bash -c '/usr/bin/mv /efi/EFI/Arch/linux-signed.efi /efi/EFI/BOOT/BOOTX64.EFI && /usr/bin/rm -rf /efi/EFI/Arch'
+Depends = systemd
+Depends = binutils
+Depends = sbsigntools
+NeedsTargets

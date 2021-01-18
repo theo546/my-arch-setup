@@ -1,0 +1,25 @@
+# Empty listen_addresses to use systemd socket activation
+listen_addresses = ['127.0.0.1:53']
+server_names = ['cloudflare', 'cloudflare-ipv6']
+blocked_query_response = 'a:127.0.0.1,aaaa:::1'
+tls_cipher_suite = [52392, 52393, 49199, 49195]
+ipv6_servers = true
+require_dnssec = true
+
+[sources]
+  [sources.'public-resolvers']
+    urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md']
+    cache_file = '/var/cache/dnscrypt-proxy/public-resolvers.md'
+    minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+    refresh_delay = 72
+    prefix = ''
+
+#[static]
+#  [static.'google']
+#  stamp = 'sdns://AgUAAAAAAAAAAAAOZG5zLmdvb2dsZS5jb20NL2V4cGVyaW1lbnRhbA'
+
+#[local_doh]
+#  listen_addresses = ['127.0.0.1:3000']
+#  path = "/dns-query"
+#  cert_file = "/etc/dnscrypt-proxy/localhost.pem"
+#  cert_key_file = "/etc/dnscrypt-proxy/localhost.pem"
