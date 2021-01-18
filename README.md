@@ -242,7 +242,7 @@ btrfs_options=rw,noatime,ssd,compress-force=zstd:2,space_cache=v2,discard=async
 ```
 *Note*: if you are not using an SSD, remove the `ssd` and `discord=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.  
 *Note2*: please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.  
-*Note3:* remove the `discord=async` if you do not wish to use TRIM for "security reasons".  
+*Note3:* remove the `discord=async` option if you do not wish to use TRIM for "security reasons".  
 *Note4:* you can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit#gid=0) to get the best compression ration that you seem good.
 
 Then mount the btrfs pool partition:
@@ -748,8 +748,8 @@ Enroll the keys in this order:
 
 ___
 
-Once on the main menu, press `Edit Keys` then `The Allowed Signatures Database  (db)`.  
-Select `Add New Key` then select the drive and the db certificate on the file list.
+Once on the main menu, select `Edit Keys` then `The Allowed Signatures Database  (db)`.  
+Now select `Add New Key` then select the drive and the db certificate on the file list.
 
 *Note:* if you are doing a dual boot with Windows or if you need the `Microsoft Corporation UEFI CA 2011` certificate enrolled, add `add_MS_db.auth` as a db certificate.
 

@@ -41,7 +41,7 @@ to `Always prompt for install` then restart your browser.
 Now access `chrome://extensions/`, activate the `Developer mode` on the top right.
 
 Download the latest version of chromium-web-store from [GitHub](https://github.com/NeverDecaf/chromium-web-store/releases).  
-To install the previously downloaded file, drag it on Chromium window, it'll prompt you to accept the extension permissions, simply click on `Add extension`.
+To install the previously downloaded file, drag it on the Chromium window, it'll prompt you to accept the extension permissions, simply click on `Add extension`.
 
 You may now install any extension, I can recommend you to install:
 - [uBlock Origin](https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm)
