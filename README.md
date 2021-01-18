@@ -25,73 +25,75 @@ If you spotted an error or if you have any recommendation to make, please open a
 
 # Table of contents
 
-0. [Verifying that everything is OK](##%200.%20Verifying%20that%20everything%20is%20OK)
+0. [Verifying that everything is OK](#0-verifying-that-everything-is-ok)
 
-1. [Download and verify the Arch ISO](##%201.%20Download%20and%20verify%20the%20Arch%20ISO)
+1. [Download and verify the Arch ISO](#1-download-and-verify-the-arch-iso)
 
-2. [Boot the system and connect to the internet](##%202.%20Boot%20the%20system%20and%20connect%20to%20the%20internet)
+2. [Boot the system and connect to the internet](#2-boot-the-system-and-connect-to-the-internet)
 
-	a. [BIOS settings](###%20a.%20BIOS%20settings)
+	a. [BIOS settings](#a-bios-settings)
 
-	b. [Connect to the internet](###%20b.%20Connect%20to%20the%20internet)
+	b. [Connect to the internet](#b-connect-to-the-internet)
 
-	c. [Synchronize the system date](###%20c.%20Synchronize%20the%20system%20date)
+	c. [Synchronize the system date](#c-synchronize-the-system-date)
 
-   d. [(optional) Configure the keyboard layout](###%20d.%20(optional)%20Configure%20the%20keyboard%20layout)
+	d. [(optional) Configure the keyboard layout](#d-optional-configure-the-keyboard-layout)
 
-3. [Make the partitions and the file system](##%203.%20Make%20the%20partitions%20and%20the%20file%20system)
+3. [Make the partitions and the file system](#3-make-the-partitions-and-the-file-system)
 
-	a. [(optional) Erase the disk with random data before doing anything](###%20a.%20(optional)%20Erase%20the%20disk%20with%20random%20data%20before%20doing%20anything)
+	a. [(optional) Erase the disk with random data before doing anything](#a-optional-erase-the-disk-with-random-data-before-doing-anything)
 
-	b. [Create the partitions using gdisk](###%20b.%20Create%20the%20partitions%20using%20gdisk)
+	b. [Create the partitions using gdisk](#b-create-the-partitions-using-gdisk)
 
-	c. [Create the LUKS2 partition](###%20c.%20Create%20the%20LUKS2%20partition)
+	c. [Create the LUKS2 partition](#c-create-the-luks2-partition)
 
-	d. [Create the LVM partition and volume group on top of the LUKS partition](###%20d.%20Create%20the%20LVM%20partition%20and%20volume%20group%20on%20top%20of%20the%20LUKS%20partition)
+	d. [Create the LVM partition and volume group on top of the LUKS partition](#d-create-the-lvm-partition-and-volume-group-on-top-of-the-luks-partition)
 
-	e. [Create the partitions on the LVM volume group](###%20e.%20Create%20the%20partitions%20on%20the%20LVM%20volume%20group)
+	e. [Create the partitions on the LVM volume group](#e-create-the-partitions-on-the-lvm-volume-group)
 
-	f. [Create the SWAP, btrfs and EFI (FAT32) partitions](###%20f.%20Create%20the%20SWAP,%20btrfs%20and%20EFI%20(FAT32)%20partitions)
+	f. [Create the SWAP, btrfs and EFI (FAT32) partitions](#f-create-the-swap-btrfs-and-efi-fat32-partitions)
 
-	g. [And mount them](###%20g.%20And%20mount%20them)
+	g. [And mount them](#g-and-mount-them)
 
-4. [Time to install the system](##%204.%20Time%20to%20install%20the%20system)
+4. [Time to install the system](#4-time-to-install-the-system)
 
-	a. [Pre-Chroot](###%20a.%20Pre-Chroot)
+	a. [Pre-Chroot](#a-pre-chroot)
 
-	b. [In the Chroot](###%20b.%20In%20the%20Chroot)
+	b. [In the Chroot](#b-in-the-chroot)
 
-5. [On the now working setup](##%205.%20On%20the%20now%20working%20setup)
+5. [On the now working setup](#5-on-the-now-working-setup)
 
-	a. [Flatpak](###%20a.%20Flatpak)
+	a. [Flatpak](#a-flatpak)
 
-	b. [USBGuard](###%20b.%20USBGuard)
+	b. [USBGuard](#b-usbguard)
 
-	c. [Firejail and AppArmor](###%20c.%20Firejail%20and%20AppArmor)
+	c. [Firejail and AppArmor](#c-firejail-and-apparmor)
 
-	d. [(optional) Set the keyboard layout for x11](###%20d.%20(optional)%20Set%20the%20keyboard%20layout%20for%20x11)
+	d. [(optional) Set the keyboard layout for x11](#d-optional-set-the-keyboard-layout-for-x11)
 
-	e. [(optional) KDE Plasma customization](###%20e.%20(optional)%20KDE%20Plasma%20customization)
+	e. [(optional) KDE Plasma customization](#e-optional-kde-plasma-customization)
 
-	f. [(optional) Fix KDE Plasma refresh rate with a 144hz screen](###%20f.%20(optional)%20Fix%20KDE%20Plasma%20refresh%20rate%20with%20a%20144hz%20screen)
+	f. [(optional) Fix KDE Plasma refresh rate with a 144hz screen](#f-optional-fix-kde-plasma-refresh-rate-with-a-144hz-screen)
 
-6. [Enroll the keys in the BIOS](##%206.%20Enroll%20the%20keys%20in%20the%20BIOS)
+6. [Enroll the keys in the BIOS](#6-enroll-the-keys-in-the-bios)
 
-	a. [(optional) Sign the Microsoft keys](###%20a.%20(optional)%20Sign%20the%20Microsoft%20keys)
+	a. [(optional) Sign the Microsoft keys](#a-optional-sign-the-microsoft-keys)
 
-   b. [Copy the certificates and the KeyTool utility](###%20b.%20Copy%20the%20certificates%20and%20the%20KeyTool%20utility)
+	b. [Copy the certificates and the KeyTool utility](#b-copy-the-certificates-and-the-keytool-utility)
 
-   c. [Enroll the keys](###%20c.%20Enroll%20the%20keys)
+	c. [Enroll the keys](#c-enroll-the-keys)
 
-7. [Post-install](##%207.%20Post-install)
+	d. [Restart and set a BIOS password](#d-restart-and-set-a-bios-password)
 
-	a. [Backup your LUKS partition header](###%20a.%20Backup%20your%20LUKS%20partition%20header)
+7. [Post-install](#7-post-install)
 
-	b. [Automatically unlock your encrypted LUKS partition using your motherboard TPM](###%20b.%20Automatically%20unlock%20your%20encrypted%20LUKS%20partition%20using%20your%20motherboard%20TPM)
+	a. [Backup your LUKS partition header](#a-backup-your-luks-partition-header)
 
-- [Self-notes](#%20Self-notes)
+	b. [Automatically unlock your encrypted LUKS partition using your motherboard TPM](#b-automatically-unlock-your-encrypted-luks-partition-using-your-motherboard-tpm)
 
-- [Final words](#%20Final%20words)
+- [Self-notes](#self-notes)
+
+- [Final words](#final-words)
 
 # And so it begins...
 
