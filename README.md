@@ -241,7 +241,7 @@ But before that, let's save the mount options in a variable so we don't have to 
 btrfs_options=rw,noatime,ssd,compress-force=zstd:2,space_cache=v2,discard=async
 ```
 *Note*: if you are not using an SSD, remove the `ssd` and `discord=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.  
-*Note2*: please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.
+*Note2*: please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.  
 *Note3:* remove the `discord=async` if you do not wish to use TRIM for "security reasons".  
 *Note4:* you can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit#gid=0) to get the best compression ration that you seem good.
 
@@ -333,15 +333,20 @@ or:
 echo "LANG=fr_FR.UTF-8" > /etc/locale.conf
 ```
 
+Set a variable containing your system hostname:
+```
+hostname=myhostname
+```
+
 Add your system hostname to the hostname file:
 ```
-echo "myhostname" > /etc/hostname
+echo $hostname > /etc/hostname
 ```
 *Note:* In this tutorial, the system hostname will be mentioned as `myhostname`.
 
 Then in the host file:
 ```
-echo -e "127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myhostname.localdomain myhostname" > /etc/hosts
+echo -e "127.0.0.1 localhost\n::1 localhost\n127.0.1.1 $hostname.localdomain $hostname" > /etc/hosts
 ```
 
 Edit the `/etc/mkinitcpio.conf` to add the `crc32c` (or `crc32c-intel`) module and the `keyboard`, `keymap`, `encrypt`, `lvm2` and `resume` hooks.  
