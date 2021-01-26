@@ -361,7 +361,7 @@ For the hooks, **the order matter**, it should be as follow:
 HOOKS=(base udev autodetect keyboard keymap modconf block encrypt lvm2 filesystems resume fsck)
 ```
 *Note:* if you do not wish to use the hibernation feature, remove the `resume` hook.  
-*Note2:* if you are only using the QWERTY keyboard layout, you can safely remove the `keymap` hook.
+*Note2:* if you are only using the QWERTY keyboard layout, you can not include the `keymap` hook.
 
 Add your keyboard layout in `/etc/vconsole.conf`:
 ```
@@ -531,7 +531,7 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager eog file-roller usbguard firejail apparmor htop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk ntfs-3g ldns
+pacman -S plasma kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager eog file-roller usbguard firejail apparmor htop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk ntfs-3g ldns gvfs-mtp
 ```
 It include:
 - KDE Plasma
@@ -550,10 +550,11 @@ It include:
 - Java 11 because of **Minecraft**
 - The NTFS-3G package so we can mount NTFS partitions
 - The ldns package for the `drill` command
+- The gvfs-mtp package so I can access the files of my Android phone
 
-Enable the NetworkManager and SDDM service:
+Enable the `NetworkManager`, `SDDM` and `AppArmor` service:
 ```
-systemctl enable NetworkManager sddm
+systemctl enable NetworkManager sddm apparmor
 ```
 
 **It is now time to restart your PC, your setup is able to boot!**
