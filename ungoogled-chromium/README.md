@@ -55,3 +55,10 @@ You may now install any extension, I can recommend you to install:
 $ wget -O - https://raw.githubusercontent.com/flathub/com.github.Eloston.UngoogledChromium/beta/widevine-install.sh | bash
 ```
 Then restart the browser.
+
+## Bonus
+
+To fix YouTube white bar with forced dark mode, add this uBlock filter ([source](https://www.reddit.com/r/uBlockOrigin/comments/l1a8pm/tip_using_ublock_to_get_rid_of_youtube_white/)):
+```
+youtube-nocookie.com,youtube.com##.ytp-gradient-bottom,.ytp-gradient-top
+```
