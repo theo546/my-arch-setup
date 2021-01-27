@@ -71,9 +71,11 @@ If you spotted an error or if you have any recommendation to make, please open a
 
 	d. [(optional) Set the keyboard layout for x11](#d-optional-set-the-keyboard-layout-for-x11)
 
-	e. [(optional) KDE Plasma customization](#e-optional-kde-plasma-customization)
+	e. [(optional) Enable the numlock at boot for SDDM](#e-optional-enable-the-numlock-at-boot-for-sddm)
 
-	f. [(optional) Fix KDE Plasma refresh rate with a 144hz screen](#f-optional-fix-kde-plasma-refresh-rate-with-a-144hz-screen)
+	f. [(optional) KDE Plasma customization](#f-optional-kde-plasma-customization)
+
+	g. [(optional) Fix KDE Plasma refresh rate with a 144hz screen](#g-optional-fix-kde-plasma-refresh-rate-with-a-144hz-screen)
 
 6. [Enroll the keys in the BIOS](#6-enroll-the-keys-in-the-bios)
 
@@ -435,7 +437,7 @@ su myuser
 $ cd
 ```
 
-In these step, we'll install the `yay` AUR helper:
+In this step, we'll install the `yay` AUR helper:
 ```
 $ git clone https://aur.archlinux.org/yay.git
 $ cd yay
@@ -564,7 +566,7 @@ systemctl enable NetworkManager sddm apparmor
 ### a. Flatpak
 Open a terminal, then install some Flatpak applications:
 ```
-flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact
+flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact
 ```
 
 Here are the installed applications:
@@ -577,6 +579,7 @@ Here are the installed applications:
 - Spotify
 - Audacity
 - FileZilla
+- Disk Usage Analyzer
 - GIMP
 - Krita
 - LibreOffice
@@ -598,11 +601,6 @@ You can find more instructions to properly setup some of these applications in t
 (optional and only if Flatpak applications doesn't respect the applied GTK theme) let's make sure that the Flatpak applications will use the Materia-dark-compact theme:
 ```
 $ echo "xsettingsd &" >> ~/.xinitrc
-```
-
-(optional) enable the numlock at boot for SDDM:
-```
-echo -e "[General]\nNumlock=on" >> /etc/sddm.conf
 ```
 
 ### b. USBGuard
@@ -637,7 +635,12 @@ localectl set-x11-keymap fr
 ```
 *Note:* you don't need to do this step if you're using a QWERTY keyboard.
 
-### e. (optional) KDE Plasma customization
+### e. (optional) Enable the numlock at boot for SDDM
+```
+echo -e "[General]\nNumlock=on" >> /etc/sddm.conf
+```
+
+### f. (optional) KDE Plasma customization
 There is two dark themes that I enjoy, [Breeze Transparent Dark](https://store.kde.org/p/1170816/) and [Breeze Darker Transparent Plasma Theme](https://store.kde.org/p/1303414/).
 
 *Appearance*  
@@ -684,7 +687,7 @@ Configure Application Menu... -> Untick Recent Applications and Recent files, Ex
 Configure Digital Clock... -> Time display: 24-Hour
 Configure Digital Clock... -> Date format: Custom -> dd/MM/yyyy
 
-### f. (optional) Fix KDE Plasma refresh rate with a 144hz screen
+### g. (optional) Fix KDE Plasma refresh rate with a 144hz screen
 ```
 $ kwriteconfig5 --file kwinrc --group Compositing --key MaxFPS 144
 $ kwriteconfig5 --file kwinrc --group Compositing --key RefreshRate 144
@@ -863,7 +866,7 @@ Now repeat the commands above to make the system unlock automatically again.
 
 ___
 
-Now: if you are bored of doing this every times there is a kernel update, I made a small script that'll add the secret into the TPM at every system boot.  
+Now: if you are bored of doing this every time there is a kernel update, I made a small script that'll add the secret into the TPM at every system boot.  
 To make it short, you'll only have to type your password only once on boot after a kernel update, the script add the secret back into the TPM on boot for you.
 
 Download the service and the script from my GitHub repo:
@@ -884,7 +887,15 @@ chmod +x /usr/bin/add-secret-to-tpm
 
 My WiFi USB dongle doesn't work without installing these drivers:
 ```
-yay -S rtl8821cu-dkms-git
+$ yay -S rtl8821cu-dkms-git
+```
+
+___
+
+To enable and start the Syncthing user service:
+```
+$ systemctl enable --user syncthing
+$ systemctl start --user syncthing
 ```
 
 ___
