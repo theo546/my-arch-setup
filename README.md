@@ -75,7 +75,7 @@ If you spotted an error or if you have any recommendation to make, please open a
 
 	f. [(optional) KDE Plasma customization](#f-optional-kde-plasma-customization)
 
-	g. [(optional) Fix KDE Plasma refresh rate with a 144hz screen](#g-optional-fix-kde-plasma-refresh-rate-with-a-144hz-screen)
+	g. [(optional) Fix KDE Plasma refresh rate with a 144 Hz screen](#g-optional-fix-kde-plasma-refresh-rate-with-a-144-hz-screen)
 
 6. [Enroll the keys in the BIOS](#6-enroll-the-keys-in-the-bios)
 
@@ -365,6 +365,13 @@ HOOKS=(base udev autodetect keyboard keymap modconf block encrypt lvm2 filesyste
 *Note:* if you do not wish to use the hibernation feature, remove the `resume` hook.  
 *Note2:* if you are only using the QWERTY keyboard layout, you can not include the `keymap` hook.
 
+You can now save and exit the file.
+
+(optional) enable the zstd compression for the initramfs:
+```
+sed -i 's/#COMPRESSION="zstd"/COMPRESSION="zstd"/g' /etc/mkinitcpio.conf
+```
+
 Add your keyboard layout in `/etc/vconsole.conf`:
 ```
 echo "KEYMAP=en" > /etc/vconsole.conf
@@ -419,6 +426,16 @@ echo "Storage=none" >> /etc/systemd/coredump.conf
 sed -i 's/#SystemMaxUse=/SystemMaxUse=250M/g' /etc/systemd/journald.conf
 ```
 
+(optional) allow the user to force a system reboot after smashing the CtrlAltDel keys 7 times:
+```
+sed -i 's/#CtrlAltDelBurstAction=reboot-force/CtrlAltDelBurstAction=reboot-force/g' /etc/systemd/system.conf
+```
+
+(optional) reduce the timeout of systemd for a service shutdown to 10 secondes:
+```
+sed -i 's/#DefaultTimeoutStopSec=90s/DefaultTimeoutStopSec=10s/g' /etc/systemd/system.conf
+```
+
 (optional if you are doing a dual boot with Windows) set the RTC date to save the time with your timezone:
 ```
 timedatectl set-local-rtc 1 --adjust-system-clock
@@ -465,12 +482,14 @@ Then exit the su mode:
 $ exit
 ```
 
-Add the boot options in `sbupdate.conf`, this command will automatically fetch the UUID of the LVM partition and add the boot flags for AppArmor and set the kernel loglevel to 3.
+Add the boot options in `sbupdate.conf`, this command will automatically fetch the UUID of the LVM partition, add the boot flags for AppArmor and set the kernel loglevel to 3.
 ```
-sed -i 's/#CMDLINE_DEFAULT=""/CMDLINE_DEFAULT="cryptdevice=UUID='"$(blkid -s UUID -o value /dev/sda2)"':cryptlvm:allow-discards root=\/dev\/vg\/root resume=\/dev\/vg\/swap rootflags=subvol=@ rw loglevel=3 rd.udev.log_priority=3 i915.fastboot=1 rd.systemd.show_status=false systemd.show_status=false quiet splash apparmor=1 lsm=lockdown,yama,apparmor"/g' /etc/sbupdate.conf
+sed -i 's/#CMDLINE_DEFAULT=""/CMDLINE_DEFAULT="cryptdevice=UUID='"$(blkid -s UUID -o value /dev/sda2)"':cryptlvm:allow-discards root=\/dev\/vg\/root resume=\/dev\/vg\/swap rootflags=subvol=@ rw loglevel=3 rd.udev.log_priority=3 rd.systemd.show_status=false systemd.show_status=false quiet splash apparmor=1 lsm=lockdown,yama,apparmor"/g' /etc/sbupdate.conf
 ```
 *Note:* if you are using an HDD or if you do not wish to use TRIM for "security reasons", remove the `allow-discards` option.  
-*Note2:* if you do not wish to use the hibernation feature, remove the `resume` option.
+*Note2:* if you do not wish to use the hibernation feature, remove the `resume` option.  
+*Note3:* add the `i915.fastboot=1` option if you are using an integrated GPU of an Intel CPU.  
+*Note4:* add the `nvidia-drm.modeset=1` option if you wish to use Wayland with an NVIDIA graphics card.
 
 Set the ESP dir in the `sbupdate.conf` as `/efi`:
 ```
@@ -533,26 +552,32 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager eog file-roller usbguard firejail apparmor htop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk ntfs-3g ldns gvfs-mtp
+pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools
 ```
 It include:
 - KDE Plasma
+- The Plasma Wayland session package so a Wayland session under Plasma may be started
 - Firefox and the French language package
 - Firejail, AppArmor and USBGuard
 - Flatpak
 - VirtualBox
 - The Adapta theme, the Materia theme, the Papirus icon pack and the dmz cursor
 - A bunch of fonts to avoid the missing font squares
-- Nautilus, Eyes of GNOME, Spectacle, File Roller, the amazing GNOME Disks utility and GNOME Keyring
+- Nautilus, Spectacle, the amazing GNOME Disks utility and GNOME Keyring
 - packagekit-qt5 to be able to update Arch directly from KDE Discover
-- htop
+- htop and bpytop
 - dnscrypt-proxy to prevent your ISP from knowing where you're going
 - Syncthing to sync my musics between my devices
-- Pulseeffects to boost my headphone bass and a plugin required to use the equalizer
+- PulseEffects to boost my headphone bass and a plugin required to use the equalizer
 - Java 11 because of **Minecraft**
 - The NTFS-3G package so we can mount NTFS partitions
 - The ldns package for the `drill` command
 - The gvfs-mtp package so I can access the files of my Android phone
+- gocryptfs so the Vault feature of KDE Plasma is available
+- compsize for btrfs
+- A whois client
+- openbsd-netcat to be able to connect to SSH server using a SOCKS proxy
+- net-tools for the netstat tool
 
 Enable the `NetworkManager`, `SDDM` and `AppArmor` service:
 ```
@@ -566,7 +591,7 @@ systemctl enable NetworkManager sddm apparmor
 ### a. Flatpak
 Open a terminal, then install some Flatpak applications:
 ```
-flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact
+flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact org.gnome.eog org.gnome.FileRoller com.github.wwmm.pulseeffects org.gnome.seahorse.Application
 ```
 
 Here are the installed applications:
@@ -588,6 +613,7 @@ Here are the installed applications:
 - VLC
 - Steam
 - Steam Proton
+- Steam Proton-GE
 - OBS Studio
 - Remmina
 - Firefox
@@ -595,6 +621,10 @@ Here are the installed applications:
 - Code-OSS
 - The Adapta Nokto Eta theme
 - The Materia Dark Compact theme
+- Eyes of GNOME
+- File Roller
+- PulseEffects
+- Seahorse
 
 You can find more instructions to properly setup some of these applications in their respective folders.
 
@@ -687,7 +717,17 @@ Configure Application Menu... -> Untick Recent Applications and Recent files, Ex
 Configure Digital Clock... -> Time display: 24-Hour
 Configure Digital Clock... -> Date format: Custom -> dd/MM/yyyy
 
-### g. (optional) Fix KDE Plasma refresh rate with a 144hz screen
+### g. (optional) Fix KDE Plasma refresh rate with a 144 Hz screen
+**Important:** Since Plasma 5.21, the compositor behavior has changed, it is not possible to disable VSync anymore under x.org, which means that it is not possible to get a working setup with mixed refresh rates (ex: one 60 Hz screen and two 144 Hz screens), the refresh rate of the compositor will always stick to refresh rate of the monitor with the lowest refresh rate.  
+To fix this issue for now, disable the compositor entirely:  
+Display and Monitor -> Compositor -> Untick Enable compositor on startup
+
+Then restart your Plasma session.
+
+___
+
+Old instructions:
+
 ```
 $ kwriteconfig5 --file kwinrc --group Compositing --key MaxFPS 144
 $ kwriteconfig5 --file kwinrc --group Compositing --key RefreshRate 144
@@ -910,8 +950,9 @@ ___
 [Set a blank password for GNOME Keyring so it doesn't ask for your user password when an app needs access to it.](https://wiki.archlinux.org/index.php/GNOME/Keyring#Manage_using_GUI)
 
 ```
-pacman -S seahorse
+flatpak run org.gnome.seahorse.Application
 ```
+Then change the password of both keyrings to nothing.
 
 ___
 
