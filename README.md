@@ -1,8 +1,6 @@
-<p style="text-align: center;font-size: 32px;">
+<h1 align="center">
 	My Arch Linux setup
-</p>
-
-___
+</h1>
 
 This git depot will teach you how to make my Arch Linux UEFI setup that features encryption, Secure Boot, btrfs and AppArmor.
 
