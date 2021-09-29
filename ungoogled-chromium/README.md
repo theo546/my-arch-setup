@@ -52,7 +52,7 @@ You may now install any extension, I can recommend you to install:
 ## 5. Install the Widevine DRM
 
 ```
-$ wget -O - https://raw.githubusercontent.com/flathub/com.github.Eloston.UngoogledChromium/beta/widevine-install.sh | bash
+$ wget -O - https://raw.githubusercontent.com/flathub/com.github.Eloston.UngoogledChromium/master/widevine-install.sh | bash
 ```
 Then restart the browser.
 

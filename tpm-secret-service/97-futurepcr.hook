@@ -1,0 +1,34 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = File
+Target = usr/lib/modules/*/vmlinuz
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = File
+Target = usr/lib/initcpio/*
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Type = Package
+Target = intel-ucode
+Target = amd-ucode
+
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = systemd
+
+[Action]
+Description = Calculating the new PCR to auto unlock the LUKS partition...
+When = PostTransaction
+Exec = /bin/bash -c 'cd /root/tpm && /usr/bin/add-secret-to-tpm'
+Depends = systemd
+Depends = binutils
+Depends = tpm2-tools
+NeedsTargets

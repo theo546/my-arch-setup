@@ -8,6 +8,8 @@ Here are the extensions I use on my Firefox setup:
 [Dark Reader](https://addons.mozilla.org/fr/firefox/addon/darkreader/)  
 [Netflix 1080p](https://addons.mozilla.org/fr/firefox/addon/netflix-1080p-firefox/)  
 [Tree Style Tab](https://addons.mozilla.org/fr/firefox/addon/tree-style-tab/)
+[Video Ad-Block, for Twitch](https://addons.mozilla.org/en-US/firefox/addon/video-ad-block-for-twitch/)
+[Profile Switcher for Firefox](https://addons.mozilla.org/fr/firefox/addon/profile-switcher/)
 
 ## Custom Firefox Sync server
 Access:
@@ -51,8 +53,20 @@ Simple fix:
 sed -i 's/# browser-allow-drm no/browser-allow-drm yes/g' /etc/firejail/firejail.config
 ```
 
+## FIDO keys does not work with Firejail
+Simple fix:
+```
+sed -i 's/# browser-disable-u2f yes/browser-disable-u2f no/g' /etc/firejail/firejail.config
+```
+
 ## Dark Reader
 Brightness -> -15  
 Contrast -> off  
 Sepia -> +10  
 Grayscale -> off
+
+## Profile Switcher
+To be able to use this extension properly, you need to install an AUR package:
+```
+yay -S firefox-profile-switcher-connector
+```

@@ -1,22 +1,27 @@
-# My "secure" Arch Linux setup
-This git depot will teach you how to make my Arch Linux UEFI setup that feature encryption, Secure Boot, btrfs and AppArmor.
+<p style="text-align: center;font-size: 32px;">
+	My Arch Linux setup
+</p>
+
+___
+
+This git depot will teach you how to make my Arch Linux UEFI setup that features encryption, Secure Boot, btrfs and AppArmor.
 
 ![The installed KDE Plasma setup](plasma.webp)
 
 ## Synopsis
 
-Here is a step by step tutorial to replicate my "dream" Arch Linux setup that include the instructions to setup:
+Here is a step by step tutorial to replicate my Arch Linux setup that includes the instructions to setup:
 - A LUKS partition on top of LVM on top of a btrfs partition with two subvolumes.
 - An encrypted SWAP partition.
 - Secure Boot using sbupdate to prevent the evil maid attack.
 - Flatpak for most applications.
 - AppArmor on top of Firejail.
 - USBGuard to prevent unauthorized USB devices to be plugged on the system.
-- Optionally a way to automate decryption using TPM and tpm_futurepcr.
+- Optionally a way to automate decryption using a TPM.
 
 *Note:* most of the informations in this tutorial were pulled from [this gist](https://gist.github.com/huntrar/e42aee630bee3295b2c671d098c81268), [this Medium post](https://medium.com/@pawitp/full-disk-encryption-on-arch-linux-backed-by-tpm-2-0-c0892cab9704), [this reddit post](https://www.reddit.com/r/archlinux/comments/7np36m/detached_luks_header_full_disk_encryption_with/) and from the [Arch Linux Wiki](https://wiki.archlinux.org).
 
-*Note2:* all the works made on this repo are licensed under the GPLv3, however, the wallpaper shown in the `plasma.webp` image and the two wallpapers in the `wallpapers` folder belong to their respective owners, I do not own or claim ownership of those said images.
+*Note2:* all the works made on this repo are licensed under the GPLv3, however, the wallpaper shown in the `plasma.webp` image, the `angeldust.webp` image and the three wallpapers in the `wallpapers` folder belong to their respective owners, I do not own or claim ownership of those said images.
 
 *Note3*: I tried to gather as much useful informations as possible to insert them all in this tutorial, I verified and tested all these steps myself on a VM and my own PC.  
 If you spotted an error or if you have any recommendation to make, please open an issue, I'll be glad to take a look.
@@ -76,6 +81,10 @@ If you spotted an error or if you have any recommendation to make, please open a
 	f. [(optional) KDE Plasma customization](#f-optional-kde-plasma-customization)
 
 	g. [(optional) Fix KDE Plasma refresh rate with a 144 Hz screen](#g-optional-fix-kde-plasma-refresh-rate-with-a-144-hz-screen)
+
+	h. [Make sure that the system is syncing to NTP servers](#h-make-sure-that-the-system-is-syncing-to-ntp-servers)
+
+	i. [(optional) Install libvirt](#i-optional-install-libvirt)
 
 6. [Enroll the keys in the BIOS](#6-enroll-the-keys-in-the-bios)
 
@@ -242,8 +251,8 @@ But before that, let's save the mount options in a variable so we don't have to 
 ```
 btrfs_options=rw,noatime,ssd,compress-force=zstd:2,space_cache=v2,discard=async
 ```
-*Note*: if you are not using an SSD, remove the `ssd` and `discord=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.  
-*Note2*: please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.  
+*Note:* if you are not using an SSD, remove the `ssd` and `discord=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.  
+*Note2:* please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.  
 *Note3:* remove the `discord=async` option if you do not wish to use TRIM for "security reasons".  
 *Note4:* you can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit#gid=0) to get the best compression ration that you seem good.
 
@@ -270,7 +279,7 @@ Create the `/home`, `/btrfs_pool` and `/efi` directories before mounting the sub
 ```
 mkdir /mnt/{home,btrfs_pool,efi}
 ```
-Now we can mount it:
+Now we can mount them:
 ```
 mount -o $btrfs_options,subvol=@home /dev/vg/root /mnt/home
 mount -o $btrfs_options,subvolid=5 /dev/vg/root /mnt/btrfs_pool
@@ -321,7 +330,17 @@ Synchronize the system time:
 hwclock --systohc
 ```
 
-Uncomment `en_US.UTF-8 UTF-8` (and / or `fr_FR.UTF-8 UTF-8`) from `/etc/locale.gen` then run:
+Uncomment `en_US.UTF-8 UTF-8` from `/etc/locale.gen`:
+```
+sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+```
+
+You can also uncomment for a language of your choice, ex: `fr_FR.UTF-8 UTF-8`:
+```
+sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/g' /etc/locale.gen
+```
+
+Then run:
 ```
 locale-gen
 ```
@@ -488,7 +507,7 @@ sed -i 's/#CMDLINE_DEFAULT=""/CMDLINE_DEFAULT="cryptdevice=UUID='"$(blkid -s UUI
 ```
 *Note:* if you are using an HDD or if you do not wish to use TRIM for "security reasons", remove the `allow-discards` option.  
 *Note2:* if you do not wish to use the hibernation feature, remove the `resume` option.  
-*Note3:* add the `i915.fastboot=1` option if you are using an integrated GPU of an Intel CPU.  
+*Note3:* add the `i915.fastboot=1` option if you are using the integrated GPU of an Intel CPU.  
 *Note4:* add the `nvidia-drm.modeset=1` option if you wish to use Wayland with an NVIDIA graphics card.
 
 Set the ESP dir in the `sbupdate.conf` as `/efi`:
@@ -536,7 +555,6 @@ openssl x509 -outform DER -in db.crt -out db.cer
 cert-to-efi-sig-list -g "$(< GUID.txt)" db.crt db.esl
 sign-efi-sig-list -g "$(< GUID.txt)" -k KEK.key -c KEK.crt db db.esl db.auth
 ```
-
 *Note:* you may change the common name to whatever you want.
 
 Get the `96-sbupdate-move.hook` file and move it into the `/usr/share/libalpm/hooks` directory:
@@ -552,7 +570,7 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools
+pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu
 ```
 It include:
 - KDE Plasma
@@ -569,7 +587,7 @@ It include:
 - dnscrypt-proxy to prevent your ISP from knowing where you're going
 - Syncthing to sync my musics between my devices
 - PulseEffects to boost my headphone bass and a plugin required to use the equalizer
-- Java 11 because of **Minecraft**
+- Java 11 LTS and the latest Java release because of **Minecraft**
 - The NTFS-3G package so we can mount NTFS partitions
 - The ldns package for the `drill` command
 - The gvfs-mtp package so I can access the files of my Android phone
@@ -578,10 +596,19 @@ It include:
 - A whois client
 - openbsd-netcat to be able to connect to SSH server using a SOCKS proxy
 - net-tools for the netstat tool
+- usbutils to get informations about connected USB devices
+- dnsmasq so the internet connection can be shared through ethernet
+- libcups, cups, ghostscript and avahi so you can print with a printer
+- xsane so you can scan using a printer
+- earlyoom to prevent system freeze when running out of RAM
+- The iw CLI tool to manage wireless devices
+- The ncdu tool to know where the storage is used
 
-Enable the `NetworkManager`, `SDDM` and `AppArmor` service:
+*Note:* installing PulseEffects will cause PulseAudio to get replaced by pipewire-pulse which is a working drop-in replacement of PulseAudio.
+
+Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups` and `avahi-daemon` service:
 ```
-systemctl enable NetworkManager sddm apparmor
+systemctl enable NetworkManager sddm apparmor cups avahi-daemon earlyoom
 ```
 
 **It is now time to restart your PC, your setup is able to boot!**
@@ -591,7 +618,7 @@ systemctl enable NetworkManager sddm apparmor
 ### a. Flatpak
 Open a terminal, then install some Flatpak applications:
 ```
-flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact org.gnome.eog org.gnome.FileRoller com.github.wwmm.pulseeffects org.gnome.seahorse.Application
+flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.qbittorrent.qBittorrent org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact org.gnome.eog org.gnome.FileRoller io.github.peazip.PeaZip com.github.wwmm.pulseeffects org.gnome.seahorse.Application
 ```
 
 Here are the installed applications:
@@ -617,12 +644,14 @@ Here are the installed applications:
 - OBS Studio
 - Remmina
 - Firefox
+- qBittorrent
 - Kdenlive
 - Code-OSS
 - The Adapta Nokto Eta theme
 - The Materia Dark Compact theme
 - Eyes of GNOME
 - File Roller
+- The PeaZip archive manager
 - PulseEffects
 - Seahorse
 
@@ -671,7 +700,8 @@ echo -e "[General]\nNumlock=on" >> /etc/sddm.conf
 ```
 
 ### f. (optional) KDE Plasma customization
-There is two dark themes that I enjoy, [Breeze Transparent Dark](https://store.kde.org/p/1170816/) and [Breeze Darker Transparent Plasma Theme](https://store.kde.org/p/1303414/).
+There is two dark themes that I enjoy, [Breeze Transparent Dark](https://store.kde.org/p/1170816/) and [Breeze Darker Transparent Plasma Theme](https://store.kde.org/p/1303414/).  
+You can also use a customized version of the Breeze Darker Transparent theme that you can find inside the themes folder, simply drag 'n drop it in Appearance then Plasma Style.
 
 *Appearance*  
 Global Theme -> Breeze Dark  
@@ -718,23 +748,46 @@ Configure Digital Clock... -> Time display: 24-Hour
 Configure Digital Clock... -> Date format: Custom -> dd/MM/yyyy
 
 ### g. (optional) Fix KDE Plasma refresh rate with a 144 Hz screen
-**Important:** Since Plasma 5.21, the compositor behavior has changed, it is not possible to disable VSync anymore under x.org, which means that it is not possible to get a working setup with mixed refresh rates (ex: one 60 Hz screen and two 144 Hz screens), the refresh rate of the compositor will always stick to refresh rate of the monitor with the lowest refresh rate.  
-To fix this issue for now, disable the compositor entirely:  
-Display and Monitor -> Compositor -> Untick Enable compositor on startup
+Open a terminal then type:
+```
+$ mkdir -p ~/.config/plasma-workspace/env && cd ~/.config/plasma-workspace/env
+$ echo -e '#!/bin/sh\nexport KWIN_X11_REFRESH_RATE=144000\nexport KWIN_X11_NO_SYNC_TO_VBLANK=1\nexport KWIN_X11_FORCE_SOFTWARE_VSYNC=1' > kwin_env.sh
+$ chmod +x kwin_env.sh
+$ kwriteconfig5 --file kwinrc --group Compositing --key MaxFPS 144
+$ kwriteconfig5 --file kwinrc --group Compositing --key RefreshRate 144
+```
+*Note:* you can set a custom refresh rate in `KWIN_X11_REFRESH_RATE` by multiplying your monitor refresh rate by a thousand.
 
 Then restart your Plasma session.
 
-___
-
-Old instructions:
-
+### h. Make sure that the system is syncing to NTP servers
 ```
-$ kwriteconfig5 --file kwinrc --group Compositing --key MaxFPS 144
-$ kwriteconfig5 --file kwinrc --group Compositing --key RefreshRate 144
-$ kwin_x11 --replace &
+timedatectl set-ntp true
 ```
-We also need to disable VSync or else the compositor will stay stuck at 60 fps:  
-Display and Monitor -> Compositor -> Tearing prevention ("vsync") -> Never
+
+### i. (optional) Install libvirt
+Open a terminal then type:
+```
+pacman -S libvirt virt-manager ebtables ovmf
+```
+This will provide libvirt itself, virt-manager to manage the VM more easily, ebtables as the firewall back-end and ovmf so your VM will be able to boot in EFI mode.
+
+Now enable the libvirtd service:
+```
+systemctl enable --now libvirtd
+```
+
+Now ask virsh to automatically start the default network at system boot:
+```
+virsh net-autostart default
+```
+
+Then start said network:
+```
+virsh net-start default
+```
+
+You're now good to go with libvirt!
 
 ## 6. Enroll the keys in the BIOS
 
@@ -777,7 +830,7 @@ Now copy the `KeyTool.efi` utility in a folder to let your motherboard know that
 mkdir -p /path/to/your/usb/drive/EFI/BOOT
 cp /usr/share/efitools/efi/KeyTool.efi /path/to/your/usb/drive/EFI/BOOT/BOOTX64.EFI
 ```
-*Note*: if your motherboard is good enough, you may not need the KeyTool utility to enroll the keys.
+*Note:* if your motherboard is good enough, you may not need the KeyTool utility to enroll the keys.
 
 ### c. Enroll the keys
 Now, restart your PC, open the boot options from your motherboard then boot off the USB drive to start the KeyTool utility.
@@ -788,7 +841,8 @@ Enroll the keys in this order:
 3. PK
 
 *Note:* make sure to last enroll your platform key.  
-*Note2*: always prefer the `.auth` certificates over the others certificate type.
+*Note2:* always prefer the `.auth` certificates over the others certificate type.
+*Note3:* do not forget to include the `add_MS_db.auth` certificate as you may not be able to boot afterward.
 
 ___
 
@@ -851,6 +905,7 @@ HOOKS(... encrypt-tpm encrypt ...)
 Get the `encrypt-tpm` hook (this is to automate decryption on boot) and move it into the `/etc/initcpio/hooks/encrypt-tpm` directory:
 ```
 wget -O /etc/initcpio/hooks/encrypt-tpm https://raw.githubusercontent.com/pawitp/arch-luks-tpm/6eda788de04b206697b5175a34e2fc969c5a6a66/hooks/encrypt-tpm
+sed -i 's/sha1/sha256/g' /etc/initcpio/hooks/encrypt-tpm
 ```
 
 Same for the other `encrypt-tpm` file:
@@ -921,7 +976,31 @@ systemctl enable add-secret-to-tpm
 chmod +x /usr/bin/add-secret-to-tpm
 ```
 
-**Note:** I am aware that a script called [tpm_futurepcr](https://github.com/grawity/tpm_futurepcr) exist, but I currently do not own a motherboard that include a TPM 2.0 chip and the TPM implementation in OVMF is not properly done and prevent me from accessing the `/sys/kernel/security/tpm0/binary_bios_measurements` special file.
+___
+
+If you wish to automatically calculate the future PCR when updating your kernel, install the `tpm_futurepcr` package from AUR:
+```
+$ yay -S tpm_futurepcr
+```
+
+Make sure the add-secret-to-tpm service is configured to use the tpm_futurepcr package:
+```
+sed -i 's/FUTURE_PCR=false/FUTURE_PCR=true/g' /usr/bin/add-secret-to-tpm
+```
+
+Install the libalpm hook so it automatically update the PCR when the kernel is updated:
+```
+wget -O /usr/share/libalpm/hooks/97-futurepcr.hook https://raw.githubusercontent.com/theo546/my-arch-setup/master/97-futurepcr.hook
+```
+
+You are now ready and good to go, try and update the system using:
+```
+pacman -S linux
+```
+
+Restart your system and it should automatically unlock the LUKS partition.
+
+**Note:** tpm_futurepcr doesn't work in OVFM as its TPM implementation is not properly done is preventing the script from accessing the `/sys/kernel/security/tpm0/binary_bios_measurements` special file.
 
 # Self-notes
 
@@ -934,8 +1013,7 @@ ___
 
 To enable and start the Syncthing user service:
 ```
-$ systemctl enable --user syncthing
-$ systemctl start --user syncthing
+$ systemctl enable --user --now syncthing
 ```
 
 ___
@@ -958,11 +1036,32 @@ ___
 
 All the libraries required for Lutris:
 ```
-pacman -S lutris giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader
+pacman -S lutris giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader zenity
+```
+
+___
+
+Make FIDO keys work in Firefox / Chrome:
+```
+pacman -S libfido2
+```
+
+___
+
+To install Discord Canary using the Flatpak beta repo:
+```
+flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+flatpak install flathub-beta com.discordapp.DiscordCanary
+```
+
+___
+
+To use the virtual camera on OBS, install the `v4l2loopback-dkms` package:
+```
+pacman -S v4l2loopback-dkms
 ```
 
 # Final words
 
 Thank you for reading this tutorial, I hope you will find anything useful in here.  
-Please make an issue if you need to suggest or fix something, I'll be glad to respond!  
-[BONNE CONTINUATION.](https://getrekt.fbivanparkedoutsideyourhouse.xyz/Archives/LaTani%C3%A8re/BestMessages/BONNE_CONTINUATION.mp3)
+Please open an issue if you need to suggest or fix something, I'll be glad to respond!
