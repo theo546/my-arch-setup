@@ -568,7 +568,7 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing pulseeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu
+pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing easyeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu partitionmanager
 ```
 It include:
 - KDE Plasma
@@ -584,7 +584,7 @@ It include:
 - htop and bpytop
 - dnscrypt-proxy to prevent your ISP from knowing where you're going
 - Syncthing to sync my musics between my devices
-- PulseEffects to boost my headphone bass and a plugin required to use the equalizer
+- EasyEffects to boost my headphone bass and a plugin required to use the equalizer
 - Java 11 LTS and the latest Java release because of **Minecraft**
 - The NTFS-3G package so we can mount NTFS partitions
 - The ldns package for the `drill` command
@@ -601,8 +601,9 @@ It include:
 - earlyoom to prevent system freeze when running out of RAM
 - The iw CLI tool to manage wireless devices
 - The ncdu tool to know where the storage is used
+- The KDE Partition Manager tool
 
-*Note:* installing PulseEffects will cause PulseAudio to get replaced by pipewire-pulse which is a working drop-in replacement of PulseAudio.
+*Note:* installing EasyEffects will cause PulseAudio to get replaced by pipewire-pulse which is a working drop-in replacement of PulseAudio.
 
 Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups` and `avahi-daemon` service:
 ```
@@ -616,7 +617,7 @@ systemctl enable NetworkManager sddm apparmor cups avahi-daemon earlyoom
 ### a. Flatpak
 Open a terminal, then install some Flatpak applications:
 ```
-flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.qbittorrent.qBittorrent org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact org.gnome.eog org.gnome.FileRoller io.github.peazip.PeaZip com.github.wwmm.pulseeffects org.gnome.seahorse.Application
+flatpak install -y com.bitwarden.desktop com.discordapp.Discord org.signal.Signal com.github.Eloston.UngoogledChromium com.github.micahflee.torbrowser-launcher com.github.tchx84.Flatseal com.spotify.Client org.audacityteam.Audacity org.filezillaproject.Filezilla org.gnome.baobab org.gimp.GIMP org.kde.krita org.libreoffice.LibreOffice org.gnome.Geary org.telegram.desktop org.videolan.VLC com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.obsproject.Studio org.remmina.Remmina org.mozilla.firefox org.qbittorrent.qBittorrent org.kde.kdenlive com.visualstudio.code-oss org.gtk.Gtk3theme.Adapta-Nokto-Eta org.gtk.Gtk3theme.Materia-dark-compact org.gnome.eog org.gnome.FileRoller io.github.peazip.PeaZip com.github.wwmm.easyeffects org.gnome.seahorse.Application
 ```
 
 Here are the installed applications:
@@ -650,7 +651,7 @@ Here are the installed applications:
 - Eyes of GNOME
 - File Roller
 - The PeaZip archive manager
-- PulseEffects
+- EasyEffects
 - Seahorse
 
 You can find more instructions to properly setup some of these applications in their respective folders.
@@ -766,9 +767,9 @@ timedatectl set-ntp true
 ### i. (optional) Install libvirt
 Open a terminal then type:
 ```
-pacman -S libvirt virt-manager ebtables ovmf
+pacman -S libvirt virt-manager ebtables ovmf swtpm
 ```
-This will provide libvirt itself, virt-manager to manage the VM more easily, ebtables as the firewall back-end and ovmf so your VM will be able to boot in EFI mode.
+This will provide libvirt itself, virt-manager to manage the VM more easily, ebtables as the firewall back-end, ovmf so your VM will be able to boot in EFI mode and a software TPM emulator.
 
 Now enable the libvirtd service:
 ```
