@@ -249,9 +249,9 @@ But before that, let's save the mount options in a variable so we don't have to 
 ```
 btrfs_options=rw,noatime,ssd,compress-force=zstd:2,space_cache=v2,discard=async
 ```
-*Note:* if you are not using an SSD, remove the `ssd` and `discard=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.
+*Note:* if you are not using an SSD, remove the `ssd` and `discard=async` option for this and every commands that are about mounting your partitions, however, you may add the `autodefrag` option.  
 *Note2:* please take into consideration that using compression may decrease your system performance, sometimes by *a lot*.  
-*Note3:* remove the `discard=async` option if you do not wish to use TRIM for "security reasons".
+*Note3:* remove the `discard=async` option if you do not wish to use TRIM for "security reasons".  
 *Note4:* you can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit#gid=0) to get the best compression ration that you seem good.
 
 Then mount the btrfs pool partition:
@@ -605,7 +605,7 @@ It include:
 
 *Note:* installing EasyEffects will cause PulseAudio to get replaced by pipewire-pulse which is a working drop-in replacement of PulseAudio.
 
-Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups` and `avahi-daemon` service:
+Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups`, `avahi-daemon` and the `earlyoom` services:
 ```
 systemctl enable NetworkManager sddm apparmor cups avahi-daemon earlyoom
 ```
@@ -771,7 +771,7 @@ pacman -S libvirt virt-manager ebtables ovmf swtpm
 ```
 This will provide libvirt itself, virt-manager to manage the VM more easily, ebtables as the firewall back-end, ovmf so your VM will be able to boot in EFI mode and a software TPM emulator.
 
-Now enable the libvirtd service:
+Now enable and start the libvirtd service:
 ```
 systemctl enable --now libvirtd
 ```
