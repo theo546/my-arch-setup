@@ -568,7 +568,7 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts-emoji ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family noto-fonts networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing easyeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu partitionmanager
+pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing easyeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu partitionmanager
 ```
 It include:
 - KDE Plasma
