@@ -10,6 +10,7 @@ Here are the extensions I use on my Firefox setup:
 [Tree Style Tab](https://addons.mozilla.org/fr/firefox/addon/tree-style-tab/)
 [Video Ad-Block, for Twitch](https://addons.mozilla.org/en-US/firefox/addon/video-ad-block-for-twitch/)
 [Profile Switcher for Firefox](https://addons.mozilla.org/fr/firefox/addon/profile-switcher/)
+[Return Youtube Dislike](https://addons.mozilla.org/en-US/firefox/addon/return-youtube-dislikes/)
 
 ## Custom Firefox Sync server
 Access:
