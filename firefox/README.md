@@ -7,9 +7,9 @@ Here are the extensions I use on my Firefox setup:
 [Bitwarden](https://addons.mozilla.org/fr/firefox/addon/bitwarden-password-manager/)  
 [Dark Reader](https://addons.mozilla.org/fr/firefox/addon/darkreader/)  
 [Netflix 1080p](https://addons.mozilla.org/fr/firefox/addon/netflix-1080p-firefox/)  
-[Tree Style Tab](https://addons.mozilla.org/fr/firefox/addon/tree-style-tab/)
-[Video Ad-Block, for Twitch](https://addons.mozilla.org/en-US/firefox/addon/video-ad-block-for-twitch/)
-[Profile Switcher for Firefox](https://addons.mozilla.org/fr/firefox/addon/profile-switcher/)
+[Tree Style Tab](https://addons.mozilla.org/fr/firefox/addon/tree-style-tab/)  
+[Video Ad-Block, for Twitch](https://addons.mozilla.org/en-US/firefox/addon/video-ad-block-for-twitch/)  
+[Profile Switcher for Firefox](https://addons.mozilla.org/fr/firefox/addon/profile-switcher/)  
 [Return Youtube Dislike](https://addons.mozilla.org/en-US/firefox/addon/return-youtube-dislikes/)
 
 ## Custom Firefox Sync server

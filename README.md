@@ -1029,6 +1029,13 @@ echo 'ignore noexec ${HOME}' >> /etc/firejail/multimc5.local
 
 ___
 
+Fix Firejail being too strict with Eye of GNOME (GNOME image viewer).
+```
+echo 'noblacklist ${HOME}' >> /etc/firejail/eo-common.local
+```
+
+___
+
 [Set a blank password for GNOME Keyring so it doesn't ask for your user password when an app needs access to it.](https://wiki.archlinux.org/index.php/GNOME/Keyring#Manage_using_GUI)
 
 ```
