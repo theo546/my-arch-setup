@@ -8,7 +8,7 @@ This git depot will teach you how to make my Arch Linux UEFI setup that features
 
 ## Synopsis
 
-Here is a step by step tutorial to replicate my Arch Linux setup that includes the instructions to setup:
+Here is a step by step guide to replicate my Arch Linux setup that includes the instructions to setup:
 - A LUKS partition on top of LVM on top of a btrfs partition with two subvolumes.
 - An encrypted SWAP partition.
 - Secure Boot using sbupdate to prevent the evil maid attack.
@@ -17,11 +17,11 @@ Here is a step by step tutorial to replicate my Arch Linux setup that includes t
 - USBGuard to prevent unauthorized USB devices to be plugged on the system.
 - Optionally a way to automate decryption using a TPM.
 
-*Note:* most of the informations in this tutorial were pulled from [this gist](https://gist.github.com/huntrar/e42aee630bee3295b2c671d098c81268), [this Medium post](https://medium.com/@pawitp/full-disk-encryption-on-arch-linux-backed-by-tpm-2-0-c0892cab9704), [this reddit post](https://www.reddit.com/r/archlinux/comments/7np36m/detached_luks_header_full_disk_encryption_with/) and from the [Arch Linux Wiki](https://wiki.archlinux.org).
+*Note:* most of the informations in this guide were pulled from [this gist](https://gist.github.com/huntrar/e42aee630bee3295b2c671d098c81268), [this Medium post](https://medium.com/@pawitp/full-disk-encryption-on-arch-linux-backed-by-tpm-2-0-c0892cab9704), [this reddit post](https://www.reddit.com/r/archlinux/comments/7np36m/detached_luks_header_full_disk_encryption_with/) and from the [Arch Linux Wiki](https://wiki.archlinux.org).
 
 *Note2:* all the works made on this repo are licensed under the GPLv3, however, the wallpaper shown in the `plasma.webp` image, the `angeldust.webp` image and the three wallpapers in the `wallpapers` folder belong to their respective owners, I do not own or claim ownership of those said images.
 
-*Note3*: I tried to gather as much useful informations as possible to insert them all in this tutorial, I verified and tested all these steps myself on a VM and my own PC.  
+*Note3*: I tried to gather as much useful informations as possible to insert them all in this guide, I verified and tested all these steps myself on a VM and my own PC.  
 If you spotted an error or if you have any recommendation to make, please open an issue, I'll be glad to take a look.
 
 *Note4:* unless specified with a `$`, run all the commands as root.
@@ -110,7 +110,7 @@ If you spotted an error or if you have any recommendation to make, please open a
 
 Verify that your system support UEFI as this setup is only for those systems.
 
-Benchmark your system encryption capabilities using `cryptsetup benchmark`, you should prioritize aes-xts, if the results are satisfying, you may carry on with this tutorial.  
+Benchmark your system encryption capabilities using `cryptsetup benchmark`, you should prioritize aes-xts, if the results are satisfying, you may carry on with the guide.  
 For this setup, I'll pick aes-xts using a 512 bits key.
 
 ## 1. Download and verify the Arch ISO
@@ -208,7 +208,7 @@ We are now able to open the LUKS partition using:
 ```
 cryptsetup open --allow-discards /dev/sda2 cryptlvm
 ```
-*Note:* in this tutorial, the LUKS partition will be mentioned as `cryptlvm`.  
+*Note:* in this guide, the LUKS partition will be referenced as `cryptlvm`.  
 *Note2:* remove the `--allow-discards` option if you are not using an SSD or if you do not wish to use TRIM for "security reasons".
 
 ### d. Create the LVM partition and volume group on top of the LUKS partition
@@ -222,7 +222,7 @@ You can now create a volume group named `vg` by typing:
 vgcreate vg /dev/mapper/cryptlvm
 ```
 
-*Note:* In this tutorial, the LVM volume group will be mentioned as `vg`.
+*Note:* In this guide, the LVM volume group will be referenced as `vg`.
 
 ### e. Create the partitions on the LVM volume group
 In this setup, I will make a 8G SWAP partition named `swap`:
@@ -361,7 +361,7 @@ Add your system hostname to the hostname file:
 ```
 echo $hostname > /etc/hostname
 ```
-*Note:* In this tutorial, the system hostname will be mentioned as `myhostname`.
+*Note:* In this guide, the system hostname will be referenced as `myhostname`.
 
 Then in the host file:
 ```
@@ -463,7 +463,7 @@ Time to create your user:
 useradd -m -G wheel -s /bin/bash myuser
 passwd myuser
 ```
-*Note:* In this tutorial, the main user username will be mentioned as `myuser`.
+*Note:* In this guide, the main user username will be referenced as `myuser`.
 
 Get into your newly created user and cd into your home directory:
 ```
@@ -568,7 +568,9 @@ chmod 700 /boot
 
 Install all the packages I want for my setup:
 ```
-pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing easyeffects lsp-plugins jre11-openjdk jre-openjdk ntfs-3g ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu partitionmanager
+
+pacman -S plasma plasma-wayland-session kwalletmanager spectacle flatpak nautilus xdg-user-dirs xsettingsd firefox firefox-i18n-fr virtualbox packagekit-qt5 konsole gnome-disk-utility gnome-keyring pavucontrol adapta-gtk-theme materia-gtk-theme papirus-icon-theme xcursor-vanilla-dmz noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-dejavu ttf-liberation ttf-droid ttf-ubuntu-font-family networkmanager usbguard firejail apparmor htop bpytop dnscrypt-proxy syncthing jre8-openjdk jre-openjdk ldns gvfs-mtp gocryptfs compsize whois openbsd-netcat net-tools usbutils dnsmasq libcups cups ghostscript avahi xsane earlyoom iw ncdu partitionmanager wireguard-tools bluez
+
 ```
 It include:
 - KDE Plasma
@@ -583,10 +585,8 @@ It include:
 - packagekit-qt5 to be able to update Arch directly from KDE Discover
 - htop and bpytop
 - dnscrypt-proxy to prevent your ISP from knowing where you're going
-- Syncthing to sync my musics between my devices
-- EasyEffects to boost my headphone bass and a plugin required to use the equalizer
-- Java 11 LTS and the latest Java release because of **Minecraft**
-- The NTFS-3G package so we can mount NTFS partitions
+- Syncthing to sync files between some devices
+- Java 8 and the latest Java release because of **Minecraft**
 - The ldns package for the `drill` command
 - The gvfs-mtp package so I can access the files of my Android phone
 - gocryptfs so the Vault feature of KDE Plasma is available
@@ -602,12 +602,14 @@ It include:
 - The iw CLI tool to manage wireless devices
 - The ncdu tool to know where the storage is used
 - The KDE Partition Manager tool
+- The wireguard-tools package to be able to configurate Wireguard
+- bluez for Bluetooth support
 
 *Note:* installing EasyEffects will cause PulseAudio to get replaced by pipewire-pulse which is a working drop-in replacement of PulseAudio.
 
-Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups`, `avahi-daemon` and the `earlyoom` services:
+Enable the `NetworkManager`, `SDDM`, `AppArmor`, `cups`, `avahi-daemon`, `earlyoom` and the `bluetooth` services:
 ```
-systemctl enable NetworkManager sddm apparmor cups avahi-daemon earlyoom
+systemctl enable NetworkManager sddm apparmor cups avahi-daemon earlyoom bluetooth
 ```
 
 **It is now time to restart your PC, your setup is able to boot!**
@@ -816,6 +818,11 @@ sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_U
 sign-efi-sig-list -a -g 77fa9abd-0359-4d32-bd60-28f4e78f784b -k KEK.key -c KEK.crt db MS_UEFI_db.esl add_MS_db.auth
 ```
 
+### **Very important note**
+If you are using a Lenovo ThinkPad, **do not under any circumstance** remove the default Secure Boot keys or [you'll brick your motherboard](https://wiki.archlinux.org/title/Lenovo_ThinkPad_T14s_(AMD)_Gen_1#Secure_boot).  
+This does apply on every modern ThinkPad that were / are currently sold by Lenovo)  
+Please insert the keys alongside the already present ones.
+
 ### b. Copy the certificates and the KeyTool utility
 Make sure that you have Secure Boot in setup mode.  
 Copy the certificates to a FAT formatted USB drive:
@@ -840,7 +847,7 @@ Enroll the keys in this order:
 3. PK
 
 *Note:* make sure to last enroll your platform key.  
-*Note2:* always prefer the `.auth` certificates over the others certificate type.
+*Note2:* always prefer the `.auth` certificates over the others certificate type.  
 *Note3:* do not forget to include the `add_MS_db.auth` certificate as you may not be able to boot afterward.
 
 ___
@@ -884,7 +891,7 @@ cryptsetup open --header luks_header_backup --allow-discards /dev/sda2 cryptlvm
 
 ### b. Automatically unlock your encrypted LUKS partition using your motherboard TPM
 First of all, make sure that your PC has a TPM 2.0 chip.  
-If you don't then sorry, this part of the tutorial is not for you.
+If you don't then sorry, this part of the guide is not for you.
 
 Install the `tpm2-tools` package:
 ```
@@ -948,15 +955,15 @@ Restart your system once again:
 reboot
 ```
 
-And as you may have noticed, your system didn't asked you for a password, if it did, you may have done something wrong.
+And as you may have noticed, your system didn't ask you for a password, if it did, you may have done something wrong.
 
-After a kernel update, you will notice that the system doesn't automatically unlock the partition, that is because some PCR are now unvalidated as the hash of the EFI executable has changed.
+After a kernel update, you will notice that the system doesn't automatically unlock the partition, that is because some PCRs are now unvalidated as the hash of the EFI executable has changed.
 
 You will need to remove the secret that is stored in the TPM before trying to add it back:
 ```
 tpm2_evictcontrol -C o -c 0x81000000
 ```
-Now repeat the commands above to make the system unlock automatically again.
+Now repeat the commands above to make the system automatically unlock again.
 
 ___
 
@@ -982,14 +989,14 @@ If you wish to automatically calculate the future PCR when updating your kernel,
 $ yay -S tpm_futurepcr
 ```
 
-Make sure the add-secret-to-tpm service is configured to use the tpm_futurepcr package:
+Make sure the add-secret-to-tpm service is configured to use the `tpm_futurepcr` package:
 ```
 sed -i 's/FUTURE_PCR=false/FUTURE_PCR=true/g' /usr/bin/add-secret-to-tpm
 ```
 
 Install the libalpm hook so it automatically update the PCR when the kernel is updated:
 ```
-wget -O /usr/share/libalpm/hooks/97-futurepcr.hook https://raw.githubusercontent.com/theo546/my-arch-setup/master/97-futurepcr.hook
+wget -O /usr/share/libalpm/hooks/97-futurepcr.hook https://raw.githubusercontent.com/theo546/my-arch-setup/main/tpm-secret-service/97-futurepcr.hook
 ```
 
 You are now ready and good to go, try and update the system using:
@@ -999,7 +1006,7 @@ pacman -S linux
 
 Restart your system and it should automatically unlock the LUKS partition.
 
-**Note:** tpm_futurepcr doesn't work in OVFM as its TPM implementation is not properly done is preventing the script from accessing the `/sys/kernel/security/tpm0/binary_bios_measurements` special file.
+**Note:** tpm_futurepcr doesn't work in OVFM as its TPM implementation is not properly done and is preventing the script from accessing the `/sys/kernel/security/tpm0/binary_bios_measurements` special file.
 
 # Self-notes
 
@@ -1020,6 +1027,13 @@ ___
 Fix MultiMC5 with Firejail:
 ```
 echo 'ignore noexec ${HOME}' >> /etc/firejail/multimc5.local
+```
+
+___
+
+Fix Firejail being too strict with Eye of GNOME (GNOME image viewer).
+```
+echo 'noblacklist ${HOME}' >> /etc/firejail/eo-common.local
 ```
 
 ___
@@ -1062,5 +1076,6 @@ pacman -S v4l2loopback-dkms
 
 # Final words
 
-Thank you for reading this tutorial, I hope you will find anything useful in here.  
+
+Thank you for reading this guide, I hope you will find anything useful in here.  
 Please open an issue if you need to suggest or fix something, I'll be glad to respond!
